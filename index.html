@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>DanisMoney</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+  // API KEYS
+  const ANTHROPIC_KEY = "YOUR_ANTHROPIC_KEY_HERE";
+  const FINNHUB_KEY = "YOUR_FINNHUB_KEY_HERE";
+
+  // React example
+  const { useState } = React;
+
+  function App() {
+    const [text, setText] = useState("");
+
+    async function sendMessage() {
+      const r = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_KEY
+        },
+        body: JSON.stringify({
+          model: "claude-3-sonnet-20240229",
+          messages: [{ role: "user", content: text }]
+        })
+      });
+
+      const data = await r.json();
+      console.log(data);
+    }
+
+    return React.createElement("div", null,
+      React.createElement("input", {
+        value: text,
+        onChange: e => setText(e.target.value)
+      }),
+      React.createElement("button", {
+        onClick: sendMessage
+      }, "שלח")
+    );
+  }
+
+  ReactDOM.render(
+    React.createElement(App),
+    document.getElementById("root")
+  );
+</script>
+
+<!-- React CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+</body>
+</html>
